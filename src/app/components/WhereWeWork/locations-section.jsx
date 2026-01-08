@@ -33,12 +33,12 @@ export default function LocationsSection() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-20 bg-white">
+    <section className="py-20 px-4 sm:px-6 lg:px-20 bg-white -mt-30 ">
       <div className="w-full mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* LEFT SIDE CONTENT */}
           <div>
-            <div className="mb-4">
+            <div className="mb-4 ">
               <span className="text-[#BC153F] font-normal text-sm tracking-widest uppercase">
                 Where We Work
               </span>

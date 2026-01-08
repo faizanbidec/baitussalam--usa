@@ -25,9 +25,9 @@ const page = () => {
 
         <ImpactSection />
       </main>
-      <div className="mb-20">
+      {/* <div className="mb-20">
         <TeamSection />
-      </div>
+      </div> */}
       <div>
         <LocationsSection />
       </div>
