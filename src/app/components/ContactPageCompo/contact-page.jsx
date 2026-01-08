@@ -177,6 +177,7 @@ export default function ContactPage() {
     setStatus(null)
 
     const res = await createContact(formData) 
+    console.log("Response from server:", res)
 
     if (res?.success) {
       setStatus({ type: "success", message: "Message sent successfully!" })

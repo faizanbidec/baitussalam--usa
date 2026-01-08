@@ -167,7 +167,7 @@ const nav = [
   { href: "/programs", label: "Programs" },
   { href: "/services", label: "Services" },
   { href: "/Contact", label: "Contact" },
-  { href: "/blogs", label: "Blog" },
+  { href: "/Blogs", label: "Blog" },
 ];
 
 export function Navbar() {
