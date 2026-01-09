@@ -6,6 +6,7 @@ import useServicesStore from "@/app/lib/stores/servicesStore";
 import useProgramsStore from "@/app/lib/stores/programsStore";
 import useCategoryStore from "@/app/lib/stores/CategoryStore";
 import PayPalCheckoutButton from "../PayPalCheckoutButton";
+import axios from "axios";
 
 export default function DonationModal({
   open,
@@ -81,23 +82,49 @@ export default function DonationModal({
     selectedCategory,
   ]);
 
-  const validateFields = () => {
-    let newErrors = {};
+const handleDonationSubmit = async () => {
+  // if (!validateFields()) return;
 
-    if (!donationAmount) newErrors.donationAmount = "Amount is required.";
-    if (!donationType)
-      newErrors.donationType = "Please select a donation type.";
-    if (!selectedServiceOption && !selectedProgramOption)
-      newErrors.support = "Select either a Service or a Program.";
-    if (!userName.trim()) newErrors.userName = "Name is required.";
-    if (!userEmail.trim()) newErrors.userEmail = "Email is required.";
-    if (!userAddress.trim()) newErrors.userAddress = "Address is required.";
-    if (!userPhone.trim()) newErrors.userPhone = "Phone number is required.";
+  try {
+    const selectedCategoryObj = donationCategories.find(
+      (cat) => cat.name === donationType
+    );
 
-    setErrors(newErrors);
+    const payload = {
+      status: "pending", // REQUIRED
+      amount: Number(donationAmount), // MUST BE NUMBER
+      currency_code: "USD", // REQUIRED
+      payment_through: paymentOption, // REQUIRED
+      category_id: selectedCategoryObj?.id, // MUST BE NUMBER
+      telephone: userPhone.toString(), // 10–15 digits
 
-    return Object.keys(newErrors).length === 0;
-  };
+      name: userName,
+      email: userEmail,
+      address: userAddress,
+      payment_frequency: paymentFrequency,
+      service: selectedServiceOption || null,
+      program: selectedProgramOption || null,
+    };
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}transactions/create`,
+      payload,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    console.log("Donation Success:", response.data);
+    alert("Donation submitted successfully!");
+    setOpen(false);
+  } catch (error) {
+    console.error(
+      "Donation Error:",
+      error.response?.data || error.message
+    );
+    alert("Failed to submit donation. Please try again.");
+  }
+};
+
+
 
   // Handle service selection - disable program dropdown
   const handleServiceChange = (e) => {
@@ -391,7 +418,7 @@ export default function DonationModal({
               {paymentOption !== "PayPal" && (
                 <div className="flex justify-end flex-1 lg:flex-none">
                   <button
-                    onClick={() => validateFields()}
+                    onClick={() => handleDonationSubmit()}
                     className="h-12 px-10 rounded-full bg-[#BC153F] text-white font-semibold"
                   >
                     Donate Now
